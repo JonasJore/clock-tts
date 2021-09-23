@@ -19,13 +19,31 @@ fn get_first_digit(digit: i32) -> i32 {
     copy
 }
 
+#[test]
+fn test_get_first_digit() {
+    assert_eq!(get_first_digit(100), 1);
+    assert_eq!(get_first_digit(23), 2);
+    assert_eq!(get_first_digit(45233), 4);
+    assert_eq!(get_first_digit(5), 5);
+}
+
 fn hours_bigger_than_twelve_formatter(hour: i32) -> String {
     let hours_key: i32 = hour - 12;
     if hours_key < 10 {
-        format!("0{}", hours_key).to_string().to_string();
+        if hours_key < 0 {
+            return "0".to_string();
+        }
+        return format!("0{}", hours_key).to_string();
     }
 
     return format!("{}", &hours_key).to_string();
+}
+
+#[test]
+fn test_hour_formatter() {
+    assert_eq!(hours_bigger_than_twelve_formatter(13), "01");
+    assert_eq!(hours_bigger_than_twelve_formatter(23), "11");
+    assert_eq!(hours_bigger_than_twelve_formatter(0), "0");
 }
 
 pub fn clock_time_algorithm(input_clock_time: &str) -> String {
