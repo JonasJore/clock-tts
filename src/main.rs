@@ -1,3 +1,10 @@
+use tts_rust::text_speech;
+use chrono;
+mod clock_time_algorithm;
+
 fn main() {
-    println!("Hello, world!");
+    let clock_time: String = chrono::Local::now().format("%H:%M").to_string();
+    text_speech(
+        clock_time_algorithm::clock_time_algorithm(&clock_time).as_str()
+    );
 }

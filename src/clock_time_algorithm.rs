@@ -19,7 +19,16 @@ fn get_first_digit(digit: i32) -> i32 {
     copy
 }
 
-fn main() {
+fn hours_bigger_than_twelve_formatter(hour: i32) -> String {
+    let hours_key: i32 = hour - 12;
+    if hours_key < 10 {
+        format!("0{}", hours_key).to_string().to_string();
+    }
+
+    return format!("{}", &hours_key).to_string();
+}
+
+pub fn clock_time_algorithm(input_clock_time: &str) -> String {
     let hours_map: HashMap<&str, &str> = [
         ("01", "one"),
         ("02", "two"),
@@ -76,15 +85,7 @@ fn main() {
     .cloned()
     .collect();
 
-    // let input = "00:00";
-    // let input = "01:30";
-    // let input = "12:05";
-    // let input = "14:01";
-    // let input = "20:29";
-    let input = "21:00";
-    // let input = "";
-
-    let input_split: Vec<&str> = input.split(':').collect();
+    let input_split: Vec<&str> = input_clock_time.split(':').collect();
 
     let clock = Clock {
         hours: &input_split[0],
@@ -93,7 +94,7 @@ fn main() {
 
     let hours_as_int = clock.hours.parse::<i32>().unwrap();
     let parsed_hours = match hours_as_int {
-        hour if hour >= 12 => Some(hours_map[&format!("0{}", (hour - 12)).to_string().as_str()]),
+        hour if hour >= 12 => Some(hours_map[&hours_bigger_than_twelve_formatter(hour).as_str()]),
         hour if hour == 0 => Some(hours_map[(hour + 12).to_string().as_str()]),
         hour if hour < 10 => Some(hours_map[&format!("0{}", hour).to_string().as_str()]),
         _ => None,
@@ -108,7 +109,7 @@ fn main() {
         parsed_minute_tens = minute_tens_map[format!("{}", first_digit).as_str()];
     }
 
-    let mut parsed_minute_ = "";
+    let mut parsed_minute_;
     parsed_minute_ = minutes_map[format!("0{}", last_digit).as_str()];
 
     let am_pm = if hours_as_int < 12 { "AM" } else { "PM" };
@@ -145,7 +146,9 @@ fn main() {
     }
 
     match time_string.is_empty() {
-      true => panic!("time string never got its value."),
-      false => println!("{}", time_string),
+        true => panic!("time string never got its value."),
+        false => println!("{}", time_string),
     };
+    
+    return time_string;
 }

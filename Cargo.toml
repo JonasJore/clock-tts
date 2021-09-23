@@ -6,5 +6,5 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tolk = "0.2"
-tts = "0.17.3"
+tts_rust = "0.2.0"
+chrono = "0.4.19"
