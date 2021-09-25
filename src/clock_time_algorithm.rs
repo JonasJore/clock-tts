@@ -1,49 +1,10 @@
 use std::collections::HashMap;
+use crate::util;
+use crate::formatters;
 
 struct Clock<'a> {
     hours: &'a str,
     minutes: &'a str,
-}
-
-fn get_first_digit(digit: i32) -> i32 {
-    let mut copy: i32 = digit;
-    if copy < 10 {
-        return copy;
-    }
-    loop {
-        if copy < 9 {
-            break;
-        }
-        copy /= 10;
-    }
-    copy
-}
-
-#[test]
-fn test_get_first_digit() {
-    assert_eq!(get_first_digit(100), 1);
-    assert_eq!(get_first_digit(23), 2);
-    assert_eq!(get_first_digit(45233), 4);
-    assert_eq!(get_first_digit(5), 5);
-}
-
-fn hours_bigger_than_twelve_formatter(hour: i32) -> String {
-    let hours_key: i32 = hour - 12;
-    if hours_key < 10 {
-        if hours_key < 0 {
-            return "0".to_string();
-        }
-        return format!("0{}", hours_key).to_string();
-    }
-
-    return format!("{}", &hours_key).to_string();
-}
-
-#[test]
-fn test_hour_formatter() {
-    assert_eq!(hours_bigger_than_twelve_formatter(13), "01");
-    assert_eq!(hours_bigger_than_twelve_formatter(23), "11");
-    assert_eq!(hours_bigger_than_twelve_formatter(0), "0");
 }
 
 pub fn clock_time_algorithm(input_clock_time: &str) -> String {
@@ -111,16 +72,17 @@ pub fn clock_time_algorithm(input_clock_time: &str) -> String {
     };
 
     let hours_as_int = clock.hours.parse::<i32>().unwrap();
+
     let parsed_hours = match hours_as_int {
-        hour if hour >= 12 => Some(hours_map[&hours_bigger_than_twelve_formatter(hour).as_str()]),
+        hour if hour >= 12 => Some(hours_map[&formatters::hours_bigger_than_twelve_formatter(hour).as_str()]),
         hour if hour == 0 => Some(hours_map[(hour + 12).to_string().as_str()]),
         hour if hour < 10 => Some(hours_map[&format!("0{}", hour).to_string().as_str()]),
-        _ => None,
+        hour => Some(hours_map[&format!("{}", hour).to_string().as_str()]),
     };
 
     let minutes_as_int = clock.minutes.parse::<i32>().unwrap();
     let last_digit = minutes_as_int % 10;
-    let first_digit = get_first_digit(minutes_as_int);
+    let first_digit = util::get_first_digit(minutes_as_int);
     let mut parsed_minute_tens = "";
 
     if first_digit > 1 && minutes_as_int > 9 {
@@ -144,6 +106,7 @@ pub fn clock_time_algorithm(input_clock_time: &str) -> String {
                 am_pm
             );
         } else {
+            println!("parsed hours: {:?}", parsed_hours);
             time_string = format!("It's {} {}", parsed_hours.unwrap(), am_pm);
         }
     } else if parsed_minute_tens != "" && minutes_as_int > 9 {
@@ -169,4 +132,9 @@ pub fn clock_time_algorithm(input_clock_time: &str) -> String {
     };
     
     return time_string;
+}
+
+#[test]
+fn test_10_am() {
+    clock_time_algorithm("10:00");
 }
